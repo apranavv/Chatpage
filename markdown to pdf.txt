@@ -1,0 +1,152 @@
+!pip install markdown pdfkit
+!apt-get install wkhtmltopdf
+
+import markdown
+import pdfkit
+from markdown.extensions import fenced_code, tables, attr_list, footnotes, codehilite
+
+# Markdown content (modified to remove unsupported elements)
+markdown_content = """
+# Comprehensive Guide to Markdown Elements
+
+## Introduction
+This document demonstrates how to use various Markdown elements effectively. We'll explore *text formatting*, **bold text**, tables, code snippets, blockquotes, horizontal rules, [links](https://example.com), task lists, footnotes, and more.
+
+---
+
+## Basic Text Formatting
+- This is a **bold** text.
+- This is an *italic* text.
+- This is an `inline code snippet`.
+- This is a ~~strikethrough~~ text.
+
+---
+
+## Bullet Points and Numbered Lists
+### Unordered List (Bullet Points)
+- Item 1
+- Item 2
+  - Sub-item 2.1
+  - Sub-item 2.2
+- Item 3
+
+### Ordered List (Numbered)
+1. First item
+2. Second item
+   1. Sub-item 2.1
+   2. Sub-item 2.2
+3. Third item
+
+---
+
+## Images
+![Beautiful Landscape](https://images.pexels.com/photos/1658884/pexels-photo-1658884.jpeg?auto=compress&cs=tinysrgb&w=600 "Landscape from Pexels")
+
+---
+
+## Tables
+| Header 1 | Header 2 | Header 3 |
+|----------|----------|----------|
+| Row 1 Col 1 | Row 1 Col 2 | Row 1 Col 3 |
+| Row 2 Col 1 | Row 2 Col 2 | Row 2 Col 3 |
+| Row 3 Col 1 | Row 3 Col 2 | Row 3 Col 3 |
+
+---
+
+## Code Snippets
+### Inline Code
+Use backticks for inline code: `let x = 5;`
+
+### Block Code (JavaScript)
+function greet(name) {
+console.log(Hello, ${name}!);
+}
+
+greet("World");function greet(name) {
+console.log(Hello, ${name}!);
+}
+
+greet("World");
+
+
+---
+
+## Blockquotes
+> This is a blockquote. It is used to quote text from another source.
+>> Nested blockquote example.
+
+---
+
+## Horizontal Rule
+
+---
+
+## Links
+Visit [Example.com](https://example.com) for more information.
+
+---
+
+## Task Lists
+- [x] Completed task
+- [ ] Incomplete task
+- [ ] Another incomplete task
+
+---
+
+## Footnotes
+Here's a simple footnote.[^1] Another footnote.[^2]
+
+[^1]: This is the first footnote.
+[^2]: This is the second footnote.
+
+---
+
+## Math Equations (LaTeX)
+You can render math equations using LaTeX syntax:
+
+Inline equation: $E = mc^2$
+
+Block equation:
+$$
+\\int_0^\\infty e^{-x^2}dx = \\frac{\\pi}{2}
+$$
+
+"""
+
+# Custom CSS for better formatting
+custom_css = """
+<style>
+body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+h1, h2, h3 { color: #2c3e50; }
+table { border-collapse: collapse; width: 100%; margin-bottom: 1em; }
+th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+th { background-color: #f2f2f2; font-weight: bold; }
+code { background-color: #f8f8f8; padding: 2px 4px; border-radius: 4px; }
+pre { background-color: #f8f8f8; padding: 10px; border-radius: 4px; overflow-x: auto; }
+blockquote { background-color: #f9f9f9; border-left: 10px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px; }
+img { max-width: 100%; height: auto; }
+</style>
+"""
+
+# Convert Markdown to HTML with extensions
+html = markdown.markdown(markdown_content, extensions=['tables', 'fenced_code', 'codehilite', 'attr_list', 'footnotes'])
+
+# Combine custom CSS with HTML content
+full_html = custom_css + html
+
+# PDF options for better rendering
+options = {
+    'page-size': 'A4',
+    'margin-top': '0.75in',
+    'margin-right': '0.75in',
+    'margin-bottom': '0.75in',
+    'margin-left': '0.75in',
+    'encoding': "UTF-8",
+    'custom-header': [('Accept-Encoding', 'gzip')],
+    'no-outline': None
+}
+
+# Convert HTML to PDF
+pdfkit.from_string(full_html, '/content/output.pdf', options=options)
+
+print("PDF has been created successfully!")
